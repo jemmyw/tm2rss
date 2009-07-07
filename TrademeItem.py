@@ -25,13 +25,18 @@ class TrademeItem:
 		self.link = 'http://www.trademe.co.nz' + title_link['href']
 		self.image = image['src']
 		
-		self.load_page()
 		self.rss = self.to_rss()
+		self.begin_load_page()
 		
-	def load_page(self):
-		result = Page.fetch(self.link)
-		if(result):
-			self.process_page(result)
+	def begin_load_page(self):
+		self.rpc = Page.fetch(self.link, 0, True)	
+			
+	def wait(self):
+		if(self.rpc):
+			result = Page.wait(self.link)
+			if(result):
+				self.process_page(result)
+				self.rss = self.to_rss()
 			
 	def process_page(self, result):
 		soup = BeautifulSoup(result)

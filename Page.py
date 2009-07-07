@@ -9,7 +9,11 @@ class Page(db.Model):
 	content = db.TextProperty()
 	url = db.StringProperty()
 	
-def fetch(url, timeout = 0):
+	rpcs = {}
+	timeouts = {}
+	urls = {}
+	
+def fetch(url, timeout = 0, async = False):
 	logging.debug('fetch: ' + url)
 	
 	data = memcache.get(url)
@@ -21,19 +25,43 @@ def fetch(url, timeout = 0):
 			if(page): return page.content	
 	
 		try:
-			response = urlfetch.fetch(url)
-			if(response.status_code == 200):
-				result = unicode(response.content, 'utf-8')
-					
-				if(timeout == 0):
-					memcache.add(url, result)
-					page = Page(url=url, content=result)
-					page.put()
-				else:								
-					memcache.add(url, result, timeout * 60)
-					
-				return result
+			rpc = urlfetch.create_rpc()
+			urlfetch.make_fetch_call(rpc, url)
+			
+			Page.rpcs[url] = rpc
+			Page.timeouts[url] = timeout
+			
+			if(async):
+				return rpc
+			else:
+				return wait(url)
+
 		except urlfetch.Error, e:
 			return None
 		
 	return None
+		
+def wait(url):
+	return store_result(url)
+	
+def store_result(url):
+	timeout = Page.timeouts[url]
+	rpc = Page.rpcs[url]
+
+	try:
+		response = rpc.get_result()	
+		if(response.status_code == 200):
+			result = unicode(response.content, 'utf-8')
+				
+			if(timeout == 0):
+				memcache.add(url, result)
+				page = Page(url=url, content=result)
+				page.put()
+			else:								
+				memcache.add(url, result, timeout * 60)
+				
+			return result
+	except urlfetch.Error, e:
+		return None
+	return None
+	

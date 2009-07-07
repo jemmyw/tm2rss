@@ -35,6 +35,10 @@ class MainPage(webapp.RequestHandler):
 		soup = BeautifulSoup(result)	
 		items = soup.findAll('li', {"class": re.compile('.*listingCard.*')})
 		items = map(self.processResult, items)
+		
+		for item in items:
+			item.wait()
+		
 		return items
 		
 	def processResult(self, item):
