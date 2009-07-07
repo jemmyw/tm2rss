@@ -1,10 +1,17 @@
 <item>
 	<title>{{ item.title }}</title>
    <link>{{ item.link }}</link>
-   <description>{{ item.description }}</description>
+   <guid>{{ item.link }}</guid>
+   
+	{% if item.description %}   
+   	<description>{{ item.description }}</description>
+	{% endif %}   
+   
    {% if date %}
    	<pubDate>{{ date }}</pubDate>
    {% endif %}
-   <guid>{{ item.link }}</guid>
-   <enclosure url="{{ item.image }}" type="image/jpeg" length="0" />
+   
+   {% if item.image %}
+   	<enclosure url="{{ item.image }}" type="image/jpeg" length="0" />
+   {% endif %}
 </item>
