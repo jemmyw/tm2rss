@@ -2,7 +2,9 @@
 	<title>{{ item.title }}</title>
    <link>{{ item.link }}</link>
    <description>{{ item.description }}</description>
-   <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+   {% if date %}
+   	<pubDate>{{ date }}</pubDate>
+   {% endif %}
    <guid>{{ item.link }}</guid>
    <enclosure url="{{ item.image }}" type="image/jpeg" length="0" />
 </item>

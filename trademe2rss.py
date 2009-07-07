@@ -18,10 +18,10 @@ class MainPage(webapp.RequestHandler):
 		
 		if(result):		
 			self.response.headers['Content-Type'] = 'application/rss+xml'
-			items_rss = self.processResults(result)
+			items = self.processResults(result)
 			
 			template_values = {
-				'items_rss': items_rss
+				'items': items
 			}
 			
 			path = os.path.join(os.path.dirname(__file__), 'index.rss')
@@ -35,22 +35,18 @@ class MainPage(webapp.RequestHandler):
 		soup = BeautifulSoup(result)	
 		items = soup.findAll('li', {"class": re.compile('.*listingCard.*')})
 		items = map(self.processResult, items)
-		
-		return "\n".join(items)
+		return items
 		
 	def processResult(self, item):
-		titem = TrademeItem()
+		titem = TrademeItem.TrademeItem()
 		titem.load_item(item)
-		
-		path = os.path.join(os.path.dirname(__file__), 'item_rss.rss')
-		return template.render(path, {'item': titem})
-		
+		return titem
 
 
 application = webapp.WSGIApplication(
 												[('/', MainPage)],
 												debug=True)
-												
+
 def main():
 	run_wsgi_app(application)
 

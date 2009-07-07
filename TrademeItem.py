@@ -1,5 +1,12 @@
 import Page
+import re
+import os
+import logging
+from dateutil.parser import *
+from dateutil.tz import *
+from datetime import *
 from BeautifulSoup import BeautifulSoup
+from google.appengine.ext.webapp import template
 
 class TrademeItem:
 	def __init__(self):
@@ -7,6 +14,8 @@ class TrademeItem:
 		self.link = ""
 		self.image = ""
 		self.description = ""
+		self.date = None
+		self.rss = None
 		
 	def load_item(self, item):
 		title_link = item.find('a', id = re.compile('listingTitle'))
@@ -17,6 +26,7 @@ class TrademeItem:
 		self.image = image['src']
 		
 		self.load_page()
+		self.rss = self.to_rss()
 		
 	def load_page(self):
 		result = Page.fetch(self.link)
@@ -29,3 +39,18 @@ class TrademeItem:
 		del(desc['style'])
 		del(desc['id'])
 		self.description = desc.prettify()
+        
+		listed_at = soup.find('li',  id=re.compile('ListingTitle_titleTime'))
+		if(listed_at):
+			matches = re.search('Listed:\s*(.*)', listed_at.string)
+			self.date = parse(matches.group(1))
+			
+	def rss_date(self):
+		return self.date.strftime('%a, %d %b %Y %H:%M:%S %z')
+			
+	def to_rss(self):
+		template_variables = {'item': self}
+		if(self.date): template_variables['date'] = self.rss_date()
+	
+		path = os.path.join(os.path.dirname(__file__), 'item_rss.rss')
+		return template.render(path, template_variables)
