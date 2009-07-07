@@ -17,12 +17,15 @@ def fetch(url, timeout = 0, async = False):
 	logging.debug('fetch: ' + url)
 	
 	data = memcache.get(url)
-	if(data is not None): 
+	if(data is not None):
+		logging.debug('fetched from memcached')
 		return data
 	else:
 		if(timeout == 0):
 			page = Page.gql('WHERE url = :1', url).get()
-			if(page): return page.content	
+			if(page):
+				logging.debug('fetched from db') 
+				return page.content	
 	
 		try:
 			rpc = urlfetch.create_rpc()
@@ -45,8 +48,11 @@ def wait(url):
 	return store_result(url)
 	
 def store_result(url):
-	timeout = Page.timeouts[url]
+	if(url not in Page.rpcs): return None
 	rpc = Page.rpcs[url]
+	
+	timeout = 0	
+	if(url in Page.timeouts): timeout = Page.timeouts[url]
 
 	try:
 		response = rpc.get_result()	
