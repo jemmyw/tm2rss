@@ -6,7 +6,7 @@ import re
 import urllib2
 import logging
 import datetime
-
+from templating import *
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
@@ -57,26 +57,25 @@ class IndexPage(webapp.RequestHandler):
 		titem.load_item(item)
 		return titem
 		
-class New(webapp.RequestHandler):
+class New(webapp.RequestHandler, Template):
 	def get(self):
-		logging.debug('new')
-		templating.render()
+		self.render()
 		
-class Create(webapp.RequestHandler):
+class Create(webapp.RequestHandler, Template):
 	def post(self):
-		logging.debug('create')
+		redirect('/show')
 		
 class Show(webapp.RequestHandler):
 	def get(self):
-		logging.debug('show')
+		self.render()
 		
 
 
 application = webapp.WSGIApplication(
-												[('/', IndexPage)],
-												[('/new', New)],
-												[('/create', Create)],
-												[('/show/(.*)', Show)],
+												[('/', IndexPage),
+												('/new', New),
+												('/create', Create),
+												('/show/(.*)', Show)],
 												debug=True)
 
 def main():
