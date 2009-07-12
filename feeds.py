@@ -1,16 +1,8 @@
-from BeautifulSoup import BeautifulSoup
-import Page
 from Feed import Feed
-import TrademeItem
-import os
 import re
-import logging
-import datetime
 from templating import *
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.ext.webapp import template
-from google.appengine.ext import db
 from google.appengine.api import users
 
 def loginRequired(func):
@@ -40,7 +32,7 @@ class Create(webapp.RequestHandler, Template):
 		if(matches is None or matches.group(1) is None):
 			url = url + '&v=List'
 		elif(matches.group(1) != 'List'):
-			url = string.replace(url, matches.group(0), 'v=List')		
+			url = string.replace(url, matches.group(0), 'v=List')
 
 		feed = Feed(url=self.request.get('url'),title=self.request.get('title'))
 		feed.put()
@@ -49,12 +41,11 @@ class Create(webapp.RequestHandler, Template):
 class Show(webapp.RequestHandler, Template):
 	@loginRequired
 	def get(self, key):
-		feed = Feed.get(key)
-		feed.load()
-
 		self.response.headers['Content-Type'] = 'application/rss+xml'
 		
-		self.render({'feed': feed, 'items': feed.items})
+		feed = Feed.get(key)
+		feed.load()
+		self.render({'feed': feed, 'items': feed.items, 'url': self.request.uri})
 
 
 application = webapp.WSGIApplication(

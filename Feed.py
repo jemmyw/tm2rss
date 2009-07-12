@@ -1,6 +1,5 @@
 import datetime
 import Page
-import logging
 from TrademeItem import *
 from google.appengine.ext import db
 
@@ -24,7 +23,7 @@ class Feed(db.Model):
 				item.load_details()
 				time = datetime.now()
 				if(time > self.start_time + self.max_time):
-					logging.debug('stop due to time restraint')
+					# Stop due to time contraint
 					break
 
 		return self.items

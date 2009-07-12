@@ -35,7 +35,6 @@ class TrademeItem:
 		if(self.rss is not None):
 			self.details = True
 		else:
-			logging.debug('make rss')
 			self.rss = self.to_rss()
 		
 	def load_details(self):
