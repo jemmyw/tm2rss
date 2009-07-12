@@ -1,0 +1,57 @@
+body,html,table {
+	font-family: Verdana;
+	font-size: 14px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #e9e9e9 url(../images/body-background.png) 50% 0 repeat-y;
+}
+
+#bd {
+	width: 739px;
+	margin: 0 auto 0 auto;
+	background: url(../images/bd-background.png) 0 0 repeat-x;
+	min-height: 600px;
+	padding-top: 20px;
+}
+
+h2 {
+	margin: 0 0 10px 0;
+}
+
+.create {
+	border: 3px solid #ffe600;
+	background: #fffacc;
+	margin: 0px 20px;
+	padding: 20px;
+}
+
+.create .field {
+	margin-bottom: 5px;
+}
+
+.create label {
+	display: block;
+	width: 80px;
+	float: left;
+}
+
+.create input {
+	width: 565px;
+}
+
+.create .note {
+	margin-left: 80px;
+	font-size: 13px;
+	color: #777777;
+}
+
+.create .buttons input {
+	width: auto;
+}
+
+.create .buttons {
+	text-align: right;
+}

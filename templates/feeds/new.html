@@ -1,9 +1,38 @@
-<form action="/create", method="POST">
-	<label for="url">URL</label>
-	<input type="text" name="url" />
+{% extends "../layouts/main.html" %}
+{% block content %}
+<div class="create">
+	{% if logged_in %}
+		<h2>Create a new Feed</h2>
 	
-	<label for="title">Title</label>
-	<input type="text" name="title" />	
-	
-	<input type="submit" value="Create" />
-</form>
+		<form action="/create" method="POST">
+			<div class="field">
+				<label for="title">Title</label>
+				<input type="text" name="title" />
+				<div class="note">Enter the feed title</div>
+			</div>
+
+			<div class="field">
+				<label for="url">URL</label>
+				<input type="text" name="url" />
+				<div class="note">Enter the URL of a Trademe search</div>
+			</div>
+
+			<div class="buttons">
+				<input type="submit" value="Create" />
+			</div>
+		</form>
+	{% else %}
+		You must <a href="{{ login_url }}">login</a> to create new feeds.
+	{% endif %}
+</div>
+
+<ul class="feeds">
+	{% for feed in feeds %}
+		<li>
+			<a href="/show/{{ feed.key }}">
+				{{ feed.title }}
+			</a>
+		</li>
+	{% endfor %}
+</ul>
+{% endblock %}

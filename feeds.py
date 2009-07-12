@@ -11,12 +11,28 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
+from google.appengine.api import users
+
+def loginRequired(func):
+	def wrapper(self, *args, **kw):
+		user = users.get_current_user()
+		if not user:
+			self.redirect(users.create_login_url(self.request.uri))
+		else:
+			func(self, *args, **kw)
+	return wrapper
 
 class New(webapp.RequestHandler, Template):
 	def get(self):
-		self.render()
+		user = users.get_current_user()
+		logged_in = user is not None
+		login_url = users.create_login_url(self.request.uri)
+		feeds = Feed.gql('ORDER BY created_at DESC').fetch(20)
+
+		self.render({'user': user, 'logged_in': logged_in, 'login_url': login_url, 'feeds': feeds})
 		
 class Create(webapp.RequestHandler, Template):
+	@loginRequired
 	def post(self):
 		url = self.request.get('url')
 		matches = re.search('v=([A-Za-z]*)', url)
@@ -31,6 +47,7 @@ class Create(webapp.RequestHandler, Template):
 		self.redirect('/show/' + str(feed.key()))
 		
 class Show(webapp.RequestHandler, Template):
+	@loginRequired
 	def get(self, key):
 		feed = Feed.get(key)
 		feed.load()
