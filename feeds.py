@@ -1,9 +1,9 @@
 from BeautifulSoup import BeautifulSoup
 import Page
+from Feed import Feed
 import TrademeItem
 import os
 import re
-import urllib2
 import logging
 import datetime
 from templating import *
@@ -63,12 +63,26 @@ class New(webapp.RequestHandler, Template):
 		
 class Create(webapp.RequestHandler, Template):
 	def post(self):
-		redirect('/show')
+		url = self.request.get('url')
+		matches = re.search('v=([A-Za-z]*)', url)
+
+		if(matches is None or matches.group(1) is None):
+			url = url + '&v=List'
+		elif(matches.group(1) != 'List'):
+			url = string.replace(url, matches.group(0), 'v=List')		
+
+		feed = Feed(url=self.request.get('url'),title=self.request.get('title'))
+		feed.put()
+		self.redirect('/show/' + str(feed.key()))
 		
-class Show(webapp.RequestHandler):
-	def get(self):
-		self.render()
+class Show(webapp.RequestHandler, Template):
+	def get(self, key):
+		feed = Feed.get(key)
+		feed.load()
+
+		self.response.headers['Content-Type'] = 'application/rss+xml'
 		
+		self.render({'feed': feed, 'items': feed.items})
 
 
 application = webapp.WSGIApplication(
@@ -82,4 +96,4 @@ def main():
 	run_wsgi_app(application)
 
 if __name__ == "__main__":
-	main()
+    main()

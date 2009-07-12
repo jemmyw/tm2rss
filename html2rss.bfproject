@@ -1,8 +1,30 @@
 name: html2rss
+files: /home/jeremy/dev/google_appengine/trademe2rss/templates/feeds/show.html
+files: /home/jeremy/dev/google_appengine/trademe2rss/Feed.py
+files: /home/jeremy/dev/google_appengine/trademe2rss/feeds.py
+files: /home/jeremy/dev/google_appengine/trademe2rss/app.yaml
 basedir: /home/jeremy/dev/google_appengine/trademe2rss/
 webdir: 
 template: 
 word_wrap: 0
+searchlist: details
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/templates/feeds/show.html
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/Page.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/Feed.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/templating.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/mixin.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/templates/feeds/new.html
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/feeds.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/app.yaml
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/trademe2rss.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/templates/feed/new.html
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/TrademeItem.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/templates/feed/show.html
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/feed/create.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/feed/new.py
+recent_files: /home/jeremy/dev/google_appengine/trademe2rss/feed/show.py
+opendir: /home/jeremy/dev/google_appengine/trademe2rss/templates/feeds
+savedir: /home/jeremy/dev/google_appengine/trademe2rss
 view_html_toolbar: 1
 view_custom_menu: 1
 view_main_toolbar: 1

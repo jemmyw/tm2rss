@@ -10,7 +10,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import memcache
 
 class TrademeItem:
-	def __init__(self):
+	def __init__(self, html):
 		self.title = ""
 		self.link = ""
 		self.image = ""
@@ -18,10 +18,14 @@ class TrademeItem:
 		self.date = None
 		self.rss = None
 		self.details = False
+		self.html = html
+		self.load()
 		
-	def load_item(self, item):
-		title_link = item.find('a', id = re.compile('listingTitle'))
-		image = item.find('img')
+	def load(self):
+		logging.debug('load')
+
+		title_link = self.html.find('a', id = re.compile('listingTitle'))
+		image = self.html.find('img')
 		
 		self.title = title_link.string
 		self.link = 'http://www.trademe.co.nz' + title_link['href']
@@ -31,6 +35,7 @@ class TrademeItem:
 		if(self.rss is not None):
 			self.details = True
 		else:
+			logging.debug('make rss')
 			self.rss = self.to_rss()
 		
 	def load_details(self):
