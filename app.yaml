@@ -1,5 +1,5 @@
-application: jemmyw
-version: 1
+application: trademe2rss
+version: 2
 runtime: python
 api_version: 1
 
