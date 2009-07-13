@@ -39,7 +39,6 @@ class Create(webapp.RequestHandler, Template):
 		self.redirect('/show/' + str(feed.key()))
 		
 class Show(webapp.RequestHandler, Template):
-	@loginRequired
 	def get(self, key):
 		self.response.headers['Content-Type'] = 'application/rss+xml'
 		

@@ -24,12 +24,14 @@ class TrademeItem:
 	def load(self):
 		logging.debug('load')
 
-		title_link = self.html.find('a', id = re.compile('listingTitle'))
+		title_link = self.html.find('a')
 		image = self.html.find('img')
 		
 		self.title = title_link.string
 		self.link = 'http://www.trademe.co.nz' + title_link['href']
-		self.image = image['src']
+
+		if(re.match('http', image['src'])):
+			self.image = image['src']
 		
 		self.rss = memcache.get(self.memcache_key())
 		if(self.rss is not None):
